@@ -29,23 +29,20 @@ let authors = [
     },
 ]
 
-app.get('/', (req, res) => {
-    console.log("test")
-    const author = "Author API"
-
-    res.json(author)
-})
-
-app.get('/author/:id', (req, res) => {
+app.get('/:id', (req, res) => {
 
     const author = authors.find((author) => {
         return author.id === Number(req.params.id)
     });
 
+    if(author){
         res.json(`${author.name}, ${author.nationality}`)
+    }else{
+        res.status('Not found').send(404)
+    }
 });
 
-app.get('/author/:id/books', (req, res) => {
+app.get('/:id/books', (req, res) => {
 
     const author = authors.find((author) => {
         return author.id === Number(req.params.id)    
@@ -53,30 +50,41 @@ app.get('/author/:id/books', (req, res) => {
 
     const books = author.books.join(', ')
 
+    if(books){
         res.json(books)
+    }else{
+        res.status('Not found').send(404)
+    }
 });
 
-
-app.get('/json/authors/:id', (req,res) => {
+app.get('/json/:id', (req,res) => {
 
     const author = authors.find((author) => {
         return author.id === Number(req.params.id)  
     });
 
-    res.json({
-        name: author.name,
-        nationality: author.nationality
-    })
+    if(author){
+        res.json({
+            name: author.name,
+            nationality: author.nationality
+        })
+    }else{
+        res.status('Not found').send(404)
+    }
 })
 
-app.get('/json/authors/:id/books', (req, res) => {
+app.get('/json/:id/books', (req, res) => {
     const author = authors.find((author) => {
         return author.id === Number(req.params.id)
     })
 
+    if(author){
     res.json({
         books:author.books
     })
+    }else{
+        res.status('Not found').send(404)
+    }
 })
 
 
